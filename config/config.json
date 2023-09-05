@@ -3,21 +3,21 @@
     "username": "freeodoo_freeodoo",
     "password": "4QzGy_ji",
     "database": "freeodoo_credit_app",
-    "host": "tgiscaleme.com",
+    "host": "144.76.112.25",
     "dialect": "mysql"
   },
   "test": {
     "username": "freeodoo_freeodoo",
     "password": "4QzGy_ji",
     "database": "freeodoo_credit_app",
-    "host": "tgiscaleme.com",
+    "host": "144.76.112.25",
     "dialect": "mysql"
   },
   "production": {
     "username": "freeodoo_freeodoo",
     "password": "4QzGy_ji",
     "database": "freeodoo_credit_app",
-    "host": "tgiscaleme.com",
+    "host": "144.76.112.25",
     "dialect": "mysql"
   }
 }
