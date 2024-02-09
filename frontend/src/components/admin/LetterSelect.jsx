@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { csv } from '../../letters-data';
 import Papa from 'papaparse';
-import { Autocomplete, Box, Button, TextField } from '@mui/material';
+import { Autocomplete, Box, Button, TextField, Paper, Typography } from '@mui/material';
+import CustomIconPaper from './CustomIconPaper';
+import { BsCcCircle } from "react-icons/bs";
+
 
 const LetterSelect = ({ value, setSelectedLetter }) => {
     const [templates, setTemplates] = React.useState([]);
@@ -16,25 +19,27 @@ const LetterSelect = ({ value, setSelectedLetter }) => {
     }, []);
 
     return (
-        <>
-            <div
-                style={{
-                    marginTop: '20px',
-                    padding: '20px',
-                    border: '1px solid black',
+        <CustomIconPaper icon={<BsCcCircle />}>
+            <Paper
+                sx={{
+                    mt: 10,
+                    padding: 5,
+                    // border: '1px solid black',
                 }}
             >
-                <div
-                    style={{
-                        display: 'flex',
-                        // flexDirection: "column",
-                        alignItems: 'center',
-                    }}
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: 2
+                  }}
                 >
-                    <h1>Step 3:</h1> <h4> Choose Choose letter</h4>
-                </div>
+                  <Typography variant="h5"> Select The Subject Of Mail</Typography>
+                </Box>
+
                 <Autocomplete
                     disablePortal
+                    fullWidth
                     id="combo-box-demo"
                     options={templates}
                     getOptionLabel={option => option['Category Name']}
@@ -43,24 +48,24 @@ const LetterSelect = ({ value, setSelectedLetter }) => {
                             <li {...props}>{option['Category Name']}</li>
                         )
                     }
-                    sx={{ width: 300, mb: 2 }}
+                    // sx={{ mb: 2 }}
                     renderInput={params => (
                         <TextField {...params} label="Letters" />
                     )}
-                    size={'small'}
+                    // size={'small'}
                     value={value}
                     onChange={(e, newValue) => {
                         console.log(newValue);
                         setSelectedLetter(newValue);
                     }}
                 />
-                <Box>
+                <Box sx={{display: "flex", justifyContent: "center"}} mt={3}>
                     <Button variant="contained" color="primary">
                         Next
                     </Button>
                 </Box>
-            </div>
-        </>
+            </Paper>
+        </CustomIconPaper>
     );
 };
 

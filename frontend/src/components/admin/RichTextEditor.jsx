@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { monthsLookup } from '../lookups/months';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Paper, Typography } from '@mui/material';
+import Stack from '@mui/material/Stack';
+import CustomIconPaper from './CustomIconPaper';
+import { MdOutlineAttachEmail } from "react-icons/md";
+
 
 const RichTextEditor = props => {
     let { data, selectedUser, equifax, experian, transUnion, saveDispute, createLoading } = props;
     equifax = true; experian = true; transUnion = true;
-    const [text, setText] = useState();
+    // const [text, setText] = useState();
     const [equifaxLetter, setEquifaxLetter] = useState('');
     const [experianLetter, setExperianLetter] = useState('');
     const [transUnionLetter, setTransUnionLetter] = useState('');
@@ -100,89 +104,104 @@ const RichTextEditor = props => {
     console.log(equifaxLetter);
 
     return (
-        <div
-            style={{
-                marginTop: '20px',
-                padding: '20px',
-                border: '1px solid black',
-            }}
-        >
-            <div
-                style={{
-                    display: 'flex',
-                    // flexDirection: "column",
-                    alignItems: 'center',
+        <CustomIconPaper icon={<MdOutlineAttachEmail />}>
+            <Paper
+                sx={{
+                    mt: 10,
+                    padding: 5,
+                    // border: '1px solid black',
                 }}
             >
-                <h1>Step 4:</h1> <h4> Generate letter</h4>
-            </div>
-            <Box sx={{ mb: 2 }}>
-                <Button onClick={() => setShowLetter('equifax')}>
-                    Equifax
-                </Button>
-                <Button onClick={() => setShowLetter('experian')}>
-                    Experian
-                </Button>
-                <Button onClick={() => setShowLetter('transUnion')}>
-                    Trans Union
-                </Button>
-            </Box>
-            <>
-                <Box>
-                    {showLetter == 'equifax' && (
-                        <div id="editor-contaner">
-                            <div className="editor">
-                                <CKEditor
-                                    editor={ClassicEditor}
-                                    data={equifaxLetter}
-                                    onChange={(event, editor) => {
-                                        const data = editor.getData();
-
-                                        setEquifaxLetter(data);
-                                    }}
-                                    config={{ UseBROnCarriageReturn: true }}
-                                />
-                            </div>
-                        </div>
-                    )}
-                    {showLetter == 'experian' && (
-                        <div id="editor-contaner">
-                            <div className="editor">
-                                <CKEditor
-                                    editor={ClassicEditor}
-                                    data={experianLetter}
-                                    onChange={(event, editor) => {
-                                        const data = editor.getData();
-
-                                        setExperianLetter(data);
-                                    }}
-                                    config={{ UseBROnCarriageReturn: true }}
-                                />
-                            </div>
-                        </div>
-                    )}
-                    {showLetter == 'transUnion' && (
-                        <div id="editor-contaner">
-                            <div className="editor">
-                                <CKEditor
-                                    editor={ClassicEditor}
-                                    data={transUnionLetter}
-                                    onChange={(event, editor) => {
-                                        const data = editor.getData();
-
-                                        setTransUnionLetter(data);
-                                    }}
-                                    config={{ UseBROnCarriageReturn: true }}
-                                />
-                            </div>
-                        </div>
-                    )}
+                <Box
+                    sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: 2
+                    }}
+                >
+                    <Typography variant="h5"> Select The Subject Of Mail</Typography>
                 </Box>
-            </>
-            <Box sx={{ mt: 2 }}>
-                <Button variant="contained" onClick={runSaveDispute} disabled={createLoading}>{createLoading ? 'Loading...' : 'Generate Letters'}</Button>
-            </Box>
-        </div>
+
+                <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                    <Typography variant="body2">Choose location According To Credit Bureaus:</Typography>
+                    <Box sx={{ mb: 2 }}>
+                        <Button onClick={() => setShowLetter('equifax')}>
+                            Equifax
+                        </Button>
+                        <Button onClick={() => setShowLetter('experian')}>
+                            Experian
+                        </Button>
+                        <Button onClick={() => setShowLetter('transUnion')}>
+                            Trans Union
+                        </Button>
+                    </Box>
+                </Box>
+                
+                <>
+                    <Box>
+                        {showLetter == 'equifax' && (
+                            <div id="editor-contaner">
+                                <div className="editor">
+                                    <CKEditor
+                                        editor={ClassicEditor}
+                                        data={equifaxLetter}
+                                        onChange={(event, editor) => {
+                                            const data = editor.getData();
+
+                                            setEquifaxLetter(data);
+                                        }}
+                                        config={{ UseBROnCarriageReturn: true }}
+                                    />
+                                </div>
+                            </div>
+                        )}
+                        {showLetter == 'experian' && (
+                            <div id="editor-contaner">
+                                <div className="editor">
+                                    <CKEditor
+                                        editor={ClassicEditor}
+                                        data={experianLetter}
+                                        onChange={(event, editor) => {
+                                            const data = editor.getData();
+
+                                            setExperianLetter(data);
+                                        }}
+                                        config={{ UseBROnCarriageReturn: true }}
+                                    />
+                                </div>
+                            </div>
+                        )}
+                        {showLetter == 'transUnion' && (
+                            <div id="editor-contaner">
+                                <div className="editor">
+                                    <CKEditor
+                                        editor={ClassicEditor}
+                                        data={transUnionLetter}
+                                        onChange={(event, editor) => {
+                                            const data = editor.getData();
+
+                                            setTransUnionLetter(data);
+                                        }}
+                                        config={{ UseBROnCarriageReturn: true }}
+                                    />
+                                </div>
+                            </div>
+                        )}
+                    </Box>
+                </>
+                <Box sx={{display: "flex", justifyContent: "center", mt: 3}}>
+                    <Stack spacing={2} direction="row">
+                        <Button
+                            variant="outlined"
+                            onClick={runSaveDispute}
+                            disabled={createLoading}>
+                            {createLoading ? 'Loading...' : 'Save as template'}
+                        </Button>
+                        <Button variant="contained">Send Letter</Button>
+                    </Stack>
+                </Box>
+            </Paper>
+        </CustomIconPaper>
     );
 };
 

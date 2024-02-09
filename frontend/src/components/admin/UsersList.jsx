@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import api from "../../state/api/api";
 import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
 import {
   Box,
   TableContainer,
@@ -16,12 +18,16 @@ import {
   Modal,
 } from "@mui/material";
 import Paper from "@mui/material/Paper";
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 import Navigation from "./Navigation";
 import { BASE_URL } from "../../config";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Link from "@mui/material/Link";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import ActionMenu from "./ActionMenu";
+
 
 const style = {
   position: "absolute",
@@ -136,6 +142,15 @@ const UsersList = () => {
 
   console.log(providers);
 
+  // seach users
+  const [searchQuery, setSearchQuery] = useState(""); // Step 1
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+  const filteredUsers = users.filter((user) =>
+    `${user.first_name} ${user.last_name}`.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   useEffect(() => {
     const url = BASE_URL + "/user";
     setLoading(true);
@@ -189,7 +204,7 @@ const UsersList = () => {
   };
 
   return (
-    <>
+    <Navigation>
       <Modal
         open={open}
         onClose={handleClose}
@@ -329,12 +344,36 @@ const UsersList = () => {
           )}
         </Box>
       </Modal>
-      <Box sx={{ mb: 2 }}>
-        <Navigation />
+
+      <Box sx={{ display: "flex", justifyContent: "space-between"}}>
+        <Stack direction="row" spacing={1}>
+          <Chip sx={{borderRadius: "-20px"}} label="ACTIVE" color="primary" icon={"12"} variant="outlined" />
+          <Chip label="INACTIVE" color="error" variant="outlined" />
+        </Stack>
+
+        <Stack direction="row" spacing={1}>
+          <TextField 
+            size="small" 
+            label="Search by name"
+            variant="outlined" 
+            value={searchQuery} // Bind searchQuery state to the TextField
+            onChange={handleSearchChange} // Update searchQuery on change
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <Button variant="contained">Add Users</Button>
+        </Stack>
       </Box>
-      <Box sx={{}}>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 1050 }}>
+     
+
+      <Paper sx={{marginTop: "10px", width: '100%', overflow: 'hidden'}}>
+        <TableContainer>
+          <Table>
             <TableHead sx={{ backgroundColor: "whitesmoke" }}>
               <TableRow>
                 <TableCell>Name</TableCell>
@@ -361,7 +400,7 @@ const UsersList = () => {
                   </TableCell>
                 </TableRow>
               )}
-              {users.map((user) => (
+              {filteredUsers?.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell
                     style={{
@@ -403,7 +442,7 @@ const UsersList = () => {
                   <TableCell>{user.state}</TableCell>
                   <TableCell>{user.zip_code}</TableCell>
                   <TableCell>{user.ss_number}</TableCell>
-                  <TableCell>
+                  {/* <TableCell>
                     <button
                       onClick={() =>
                         handleDelete(user.id, user.first_name, user.last_name)
@@ -411,13 +450,14 @@ const UsersList = () => {
                     >
                       <DeleteIcon color="error" />
                     </button>
-                  </TableCell>
+                  </TableCell> */}
+                  <ActionMenu onDelete={() => handleDelete(user.id, user.first_name, user.last_name)} />
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-      </Box>
+      </Paper>
 
       <Modal open={modalOpenImage} onClose={handleCloseImage} const>
         <Box sx={modalStyle}>
@@ -432,7 +472,7 @@ const UsersList = () => {
           </div>
         </Box>
       </Modal>
-    </>
+    </Navigation>
   );
 };
 
