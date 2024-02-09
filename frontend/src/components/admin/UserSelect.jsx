@@ -27,19 +27,20 @@ const UsersSelect = ({ value, setSelectedUser }) => {
     <div>
       <Stack direction={"row"} alignItems="center" spacing={2}>
         <Autocomplete
+          fullWidth
           disablePortal
           id="combo-box-demo"
           options={users}
           getOptionLabel={(option) =>
             `${option["first_name"]} ${option["last_name"]}`
           }
-          size="small"
+          // size="small"
           renderOption={(props, option) => (
             <li {...props} key={option.id}>
               {`${option.first_name} ${option.last_name}`}
             </li>
           )}
-          sx={{ width: 300, mb: 2, marginTop: "12px" }}
+          sx={{ mb: 2, marginTop: "12px" }}
           renderInput={(params) => <TextField {...params} label="Users" />}
           value={value}
           onChange={(e, newValue) => {

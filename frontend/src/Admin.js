@@ -14,9 +14,8 @@ import FormGroup from "@mui/material/FormGroup";
 import Checkbox from "@mui/material/Checkbox";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import Input from "@mui/material/Input";
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { v4 as uuid } from 'uuid';
+import { PiCursor } from "react-icons/pi";
 
 import {
   Table,
@@ -36,6 +35,11 @@ import Paper from "@mui/material/Paper";
 import Navigation from "./components/admin/Navigation";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "./config";
+import FileInput from "./components/admin/FileInput";
+import { Switcher } from "./components/admin/Switch";
+import CustomIconPaper from "./components/admin/CustomIconPaper";
+import { MdOutlineFileOpen } from "react-icons/md";
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 
 const style = {
   position: "absolute",
@@ -249,233 +253,251 @@ const Admin = () => {
     //   });
   };
 
+  const flexBoxStyle = {
+    display: "flex",
+    justifyContent: "space-between",
+    paddingBottom: 2,
+    alignItems: "center",
+    width: "100%",
+  };
+
+  const headerStyle = {
+    display: "flex",
+    justifyContent: "center",
+    marginBottom: 2
+  };
+
+  const flexBoxColStyle = {
+    display: "flex",
+    flexDirection: "column"
+  };
+
   return (
-    <div>
-      <Box
+    <Navigation>
+      {/* <Box
         sx={{
           mb: 3,
         }}
       >
-        <Navigation />
-      </Box>
+        
+      </Box> */}
       <div
         style={{
-          width: "60%",
+          // width: "90%",
           margin: "5px auto",
         }}
       >
-        <div>
-          <UsersSelect value={selectedUser} setSelectedUser={setSelectedUser} />
-        </div>
-        <div>
-          <Typography variant="h4" sx={{ mb: 1 }}>
-            Credit Reports
-          </Typography>
-          <Typography variant="h6" sx={{ mb: 1 }}>
-            Equifax
-          </Typography>
-          <Input
-            variant="filled"
-            type="file"
-            onChange={handleFileChangeEquifax}
-          />
-          <Typography variant="h6" sx={{ mb: 1 }}>
-            Experian
-          </Typography>
-          <Input
-            variant="filled"
-            type="file"
-            onChange={handleFileChangeExperian}
-          />
-          <Typography variant="h6" sx={{ mb: 1 }}>
-            TransUnion
-          </Typography>
-          <Input
-            variant="filled"
-            type="file"
-            onChange={handleFileChangeTransUnion}
-          />
-          <br />
-        </div>
+        <Typography variant="h6" mb={2.5}>Generate the letter to get  all credit report</Typography>
+
+        <CustomIconPaper icon={<PermIdentityIcon />} hideLine>
+          <Paper sx={{padding: 5}}>
+          {/* <div> */}
+              <UsersSelect value={selectedUser} setSelectedUser={setSelectedUser} />
+              <FileInput name={"Equifax"} onChange={handleFileChangeEquifax} />
+              <FileInput name={"Experian"} onChange={handleFileChangeExperian} />
+              <FileInput name={"TransUnion"} onChange={handleFileChangeTransUnion} />
+          </Paper>
+        </CustomIconPaper>
+
+
         <>
-          {equifax_report &&
-          selectedUser &&
-          experian_report &&
-          transUnion_report ? (
+          {
+            selectedUser && (equifax_report || experian_report || transUnion_report) ? (
             <div>
-              <h1>
+              {/* <Typography mt={2}>
                 Letter Wizard -{" "}
                 <span>{`${selectedUser.first_name} ${selectedUser.last_name}`}</span>
-              </h1>
-              <p>
+              </Typography>
+              <Typography variant="subtitle1">
                 This is where you select items to dispute so you can build your
                 letter. All new clients start with a Round 1 Dispute. Next "Add
                 New Items" manually or "Add Saved/Pending Items." For editing or
                 updating dispute items already saved, use the Dispute Items
                 Page.
-              </p>
-              <div
-                style={{
-                  padding: "20px",
-                  border: "1px solid black",
-                }}
-              >
-                <div
-                  style={{
+              </Typography> */}
+
+
+              <CustomIconPaper
+                icon={<PiCursor />}>
+                <Paper
+                  sx={{
+                    padding: 5,
+                    mt: 10,
                     display: "flex",
-                    // flexDirection: "column",
-                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "column"                  
+                    // border: "1px solid black",
                   }}
                 >
-                  <h1>Step 1:</h1> <h4> Choose Letter Type</h4>
-                </div>
-                <FormControl>
-                  <RadioGroup
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    defaultValue="Basic Dispute"
-                    name="radio-buttons-group"
+                  <Box
+                    sx={headerStyle}
                   >
-                    <FormControlLabel
-                      value="Basic Dispute"
-                      control={<Radio />}
-                      onClick={() => setHigher(false)}
-                      label="Round 1: Basic Dispute - Credit Bureaus"
-                    />
-                    <FormControlLabel
-                      value="other"
-                      control={<Radio />}
-                      onClick={() => setHigher(true)}
-                      label="Round 2 or Higher: All Other Letters - Credit Bureaus, Creditors/Furnishers, or Collectors
-                      "
-                    />
-                  </RadioGroup>
-                </FormControl>
+                    <Typography variant="h5"> Choose Letter Type</Typography>
+                  </Box>
+                  <FormControl>
+                    <Box sx={flexBoxStyle}>
+                      <Box sx={flexBoxColStyle}>
+                        <Typography variant="h6">
+                          Round 1 
+                        </Typography>
+                        <Typography>
+                          Basic Dispute - Credit Bureaus
+                        </Typography>
+                      </Box>
+                      <FormControlLabel
+                        control={<Switcher checked={!higher} onChange={() => setHigher(false)} />}
+                      />
+                    </Box>
 
-                {higher ? (
-                  <>
-                    <div>
-                      <div
-                        style={{
-                          display: "flex",
-                          // flexDirection: "column",
-                          alignItems: "center",
-                        }}
-                      >
-                        <h4>Choose Letter Recipient (Round 2 Only)</h4>
-                      </div>
-                      <FormControl>
-                        <RadioGroup
-                          aria-labelledby="demo-radio-buttons-group-label"
-                          defaultValue="Basic Dispute"
-                          name="radio-buttons-group"
-                        >
-                          <FormControlLabel
-                            value="Credit Bureau"
-                            control={<Radio />}
-                            label="Credit Bureau"
-                          />
-                          <FormControlLabel
-                            value="Creditor Reporting"
-                            control={<Radio />}
-                            label="Creditor/Furnisher Reporting the Item"
-                          />
-                        </RadioGroup>
-                      </FormControl>
-                    </div>
-                  </>
-                ) : (
-                  <></>
-                )}
-              </div>
+                    <Box sx={flexBoxStyle}>
+                      <Box sx={flexBoxColStyle}>
+                        <Typography variant="h6">
+                          Round 2 or Higher
+                        </Typography>
+                        <Typography>
+                          All Other Letters - Credit Bureaus, Creditors/Furnishers, or Collectors
+                        </Typography>
+                      </Box>
+                      <FormControlLabel
+                        control={<Switcher checked={higher} onChange={() => setHigher(true)} />}
+                      />
+                    </Box>    
+                  </FormControl>
 
-              <div
-                style={{
-                  marginTop: "20px",
-                  padding: "20px",
-                  border: "1px solid black",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    // flexDirection: "column",
-                    alignItems: "center",
+                  {higher ? (
+                    <>
+                      <Box sx={{
+                        mt: 2, display: "flex", 
+                        justifyContent: "start", 
+                        flexDirection: "column", 
+                        alignItems: "center",
+                      }}>
+
+                        <Box sx={{
+                          paddingLeft: 5,
+                          paddingRight: 5,
+                          paddingTop: 2,
+                          paddingBottom: 2,
+                          backgroundColor: "lightGray",
+                          borderRadius: "10px"
+                        }}>
+                        <Typography variant="body2">Choose Letter Recipient (Round 2 Only)</Typography>
+                        <FormControl>
+                          <RadioGroup
+                            aria-labelledby="demo-radio-buttons-group-label"
+                            defaultValue="Basic Dispute"
+                            name="radio-buttons-group"
+                          >
+                            <FormControlLabel
+                              value="Credit Bureau"
+                              control={<Radio />}
+                              label="Credit Bureau"
+                            />
+                            <FormControlLabel
+                              value="Creditor Reporting"
+                              control={<Radio />}
+                              label="Creditor/Furnisher Reporting the Item"
+                            />
+                          </RadioGroup>
+                        </FormControl>
+                        </Box>
+                      </Box>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                </Paper>
+              </CustomIconPaper>
+              
+
+              <CustomIconPaper icon={<MdOutlineFileOpen />}>
+                <Paper
+                  sx={{
+                    mt: 10,
+                    padding: 5,
+                    // border: "1px solid black",
                   }}
                 >
-                  <h1>Step 2:</h1> <h4> Choose Dispute Items</h4>
-                </div>
-                <div>
-                  {isDisputeAdded && (
-                    <TableContainer component={Paper} sx={{mb: 2}}>
-                      <Table sx={{ minWidth: 1050 }}>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Creditor/Furnisher</TableCell>
-                            <TableCell>Account</TableCell>
-                            <TableCell>Dispute Items</TableCell>
-                            <TableCell>Equifax</TableCell>
-                            <TableCell>Experian</TableCell>
-                            <TableCell>TransUnion</TableCell>
-                            <TableCell></TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {React.Children.toArray(disputeItems.map(item => (
+                  <Box
+                    sx={headerStyle}
+                  >
+                    <Typography variant="h5">Add Your Dispute</Typography>
+                  </Box>
+
+                  <Box>
+                    {isDisputeAdded && (
+                      <TableContainer component={Paper} sx={{mb: 2}}>
+                        <Table sx={{ minWidth: 1050 }}>
+                          <TableHead>
                             <TableRow>
-                              <TableCell>{item.furnisher}</TableCell>
+                              <TableCell>Creditor/Furnisher</TableCell>
+                              <TableCell>Account</TableCell>
+                              <TableCell>Dispute Items</TableCell>
+                              <TableCell>Equifax</TableCell>
+                              <TableCell>Experian</TableCell>
+                              <TableCell>TransUnion</TableCell>
+                              <TableCell></TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {React.Children.toArray(disputeItems.map(item => (
+                              <TableRow>
+                                <TableCell>{item.furnisher}</TableCell>
+                                <TableCell>Equifax, Exparian, Transunion</TableCell>
+                                <TableCell>{item.reason}</TableCell>
+                                <TableCell>
+                                  {item.equifax && <NegativeDisplay />}
+                                </TableCell>
+                                <TableCell>
+                                  {item.experian && <NegativeDisplay />}
+                                </TableCell>
+                                <TableCell>
+                                  {item.transUnion && <NegativeDisplay />}
+                                </TableCell>
+                                <TableCell>
+                                  <IconButton onClick={() => handleDeleteDispute(item.id)}>
+                                    <DeleteIcon color="primary" fontSize="large" />
+                                  </IconButton>
+                                </TableCell>
+                              </TableRow>
+                            )))}
+                            {/* <TableRow>
+                              <TableCell>{furnisher}</TableCell>
                               <TableCell>Equifax, Exparian, Transunion</TableCell>
-                              <TableCell>{item.reason}</TableCell>
+                              <TableCell>{reason}</TableCell>
                               <TableCell>
-                                {item.equifax && <NegativeDisplay />}
+                                {equifax && <NegativeDisplay />}
                               </TableCell>
                               <TableCell>
-                                {item.experian && <NegativeDisplay />}
+                                {experian && <NegativeDisplay />}
                               </TableCell>
                               <TableCell>
-                                {item.transUnion && <NegativeDisplay />}
+                                {transUnion && <NegativeDisplay />}
                               </TableCell>
                               <TableCell>
-                                <IconButton onClick={() => handleDeleteDispute(item.id)}>
+                                <IconButton onClick={handleDeleteDispute}>
                                   <DeleteIcon color="primary" fontSize="large" />
                                 </IconButton>
                               </TableCell>
-                            </TableRow>
-                          )))}
-                          {/* <TableRow>
-                            <TableCell>{furnisher}</TableCell>
-                            <TableCell>Equifax, Exparian, Transunion</TableCell>
-                            <TableCell>{reason}</TableCell>
-                            <TableCell>
-                              {equifax && <NegativeDisplay />}
-                            </TableCell>
-                            <TableCell>
-                              {experian && <NegativeDisplay />}
-                            </TableCell>
-                            <TableCell>
-                              {transUnion && <NegativeDisplay />}
-                            </TableCell>
-                            <TableCell>
-                              <IconButton onClick={handleDeleteDispute}>
-                                <DeleteIcon color="primary" fontSize="large" />
-                              </IconButton>
-                            </TableCell>
-                          </TableRow> */}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  )}
-                    <Stack direction="row" spacing={2}>
-                      <Button
-                        variant="contained"
-                        onClick={handleOpen}
-                        startIcon={<AddIcon />}
-                      >
-                        Add New Dispute Item
-                      </Button>
-                    </Stack>
-                 
-                </div>
-              </div>
+                            </TableRow> */}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      )}
+
+                      <Box sx={{display: "flex", justifyContent: "center"}} mt={3}>
+                        <Button
+                          variant="contained"
+                          onClick={handleOpen}
+                          startIcon={<AddIcon />}
+                        >
+                          Add New Dispute Item
+                        </Button>
+                      </Box>
+                  
+                  </Box>
+                </Paper>
+              </CustomIconPaper>
 
               {isDisputeAdded && (
                 <>
@@ -686,7 +708,7 @@ const Admin = () => {
           )}
         </>
       </div>
-    </div>
+    </Navigation>
   );
 };
 

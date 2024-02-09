@@ -71,10 +71,7 @@ const DisputesPage = () => {
 
   return (
     <>
-      <>
-        <Box sx={{ mb: 2 }}>
-          <Navigation />
-        </Box>
+      <Navigation>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 1050 }}>
             <TableHead sx={{ backgroundColor: "whitesmoke" }}>
@@ -234,7 +231,7 @@ const DisputesPage = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      </>
+      </Navigation>
       <>
         <RichTextModal
           open={modalOpen}
