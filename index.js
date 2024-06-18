@@ -1,4 +1,3 @@
-
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -22,11 +21,10 @@ app.use("/provider", provRoute);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 port = process.env.PORT || "5000";
-app.listen("4000", async () => {
-  console.log("Server up on http://localhost:4000");
+app.listen("5000", async () => {
+  console.log("Server up on http://localhost:5000");
   await sequelize.authenticate();
   // await sequelize.sync({ force: true });
   // await sequelize.sync();
   console.log("Database Connected!");
 });
-

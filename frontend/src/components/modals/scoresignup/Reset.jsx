@@ -17,7 +17,7 @@ export default function Reset() {
     try {
       console.log("first");
       axios
-        .post(`http://localhost:4000/auth/update-password`, {
+        .post(`http://localhost:5000/auth/update-password`, {
           // .post(`${process.env.REACT_APP_API_KEY}send_recovery_email`, {
           newPassword: newPassword,
           email: emaill,
